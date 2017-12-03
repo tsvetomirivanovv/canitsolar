@@ -1,0 +1,8 @@
+{
+  "name": "canitsolar",
+  "app_id": "0179d309",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
