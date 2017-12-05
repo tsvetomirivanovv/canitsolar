@@ -41,19 +41,39 @@ export class HomePage {
 
 
   addMapMarker(map) {
-    // Create new empty marker
+    // Create new empty marker and info window
     let mapMarker1 = new google.maps.Marker;
+    let mapMarker1InfoWindow = new google.maps.InfoWindow;
     // Map event for click
     map.addListener('click', function (event) {
       // Delete the old marker
       mapMarker1.setMap(null);
       mapMarker1 = null;
-      // Create new marker
+      // Create marker
       mapMarker1 = new google.maps.Marker({
         position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()),
         map: map
       });
+      // Create marker info window
+      mapMarker1InfoWindow = new google.maps.InfoWindow({
+        content: "TEST TEST TEST"
+      });
+
+      // Auto open marker info window when created
+      setTimeout(()=>{
+        mapMarker1InfoWindow.open(map,mapMarker1);
+      },100);
+
+      // Manual open/hide info window for marker
+      mapMarker1.addListener('click', function (event) {
+        mapMarker1InfoWindow.open(map,mapMarker1);
+      });
+
     });
+  }
+
+  showMapMarkerInfoWindow() {
+
   }
 
 }
