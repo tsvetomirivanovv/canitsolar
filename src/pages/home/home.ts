@@ -1,6 +1,6 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {NavController} from 'ionic-angular';
-
+import SunCalc from 'suncalc';
 declare var google: any;
 
 @Component({
@@ -54,9 +54,14 @@ export class HomePage {
         position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()),
         map: map
       });
+
+      // Get sunrise time on map click
+      let times = SunCalc.getTimes(new Date(), event.latLng.lat(), event.latLng.lng());
+      console.log(times);
+
       // Create marker info window
       mapMarker1InfoWindow = new google.maps.InfoWindow({
-        content: "TEST TEST TEST"
+        content: times.sunrise.toString()
       });
 
       // Auto open marker info window when created
@@ -68,6 +73,7 @@ export class HomePage {
       mapMarker1.addListener('click', function (event) {
         mapMarker1InfoWindow.open(map,mapMarker1);
       });
+
 
     });
   }
