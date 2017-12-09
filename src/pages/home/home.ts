@@ -1,6 +1,7 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {NavController} from 'ionic-angular';
 import SunCalc from 'suncalc';
+import {HomeService} from "../../services/home-service";
 declare var google: any;
 
 @Component({
@@ -10,8 +11,9 @@ declare var google: any;
 export class HomePage {
 
   @ViewChild('map') mapRef: ElementRef;
+  currentForecast = [];
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, private homeService: HomeService) {
 
   }
 
@@ -45,7 +47,7 @@ export class HomePage {
     let mapMarker1 = new google.maps.Marker;
     let mapMarker1InfoWindow = new google.maps.InfoWindow;
     // Map event for click
-    map.addListener('click', function (event) {
+    map.addListener('click', (event) => {
       // Delete the old marker
       mapMarker1.setMap(null);
       mapMarker1 = null;
@@ -74,12 +76,20 @@ export class HomePage {
         mapMarker1InfoWindow.open(map,mapMarker1);
       });
 
+      this.homeService.getLocationPowerEstimate(event.latLng.lat().toString(),event.latLng.lng().toString(),'1000','json').subscribe(
+        res => {
+          console.log(res);
+          this.currentForecast = res.forecasts;
+          console.log(this.currentForecast)
+        }
+      );
+
+      // this.showMapMarkerInfoWindow(event.latLng.lat().toString(),event.latLng.lng().toString(),'1000','json');
 
     });
   }
 
-  showMapMarkerInfoWindow() {
-
+  showMapMarkerInfoWindow(longitude,latitude,capacity,format) {
   }
 
 }

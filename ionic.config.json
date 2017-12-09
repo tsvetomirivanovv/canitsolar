@@ -4,5 +4,11 @@
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "proxies": [
+    {
+      "path": "/solcast",
+      "proxyUrl": "https://api.solcast.com.au/pv_power/forecasts"
+    }
+  ]
 }

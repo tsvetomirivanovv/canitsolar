@@ -1,5 +1,16 @@
 page-home {
   #map{
-    height: 30%;
+    height: 100%;
+    width: 100%;
   }
+
+  #col-1-map{
+    height: 200px;
+  }
+
+  #col-2-forecast{
+    height: 200px;
+    width: 200px;
+  }
+
 }
