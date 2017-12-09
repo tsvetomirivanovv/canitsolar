@@ -81,6 +81,7 @@ export class HomePage {
           console.log(res);
           this.currentForecast = res.forecasts;
           console.log(this.currentForecast)
+          alert(res.forecasts[1].pv_estimate)
         }
       );
 
