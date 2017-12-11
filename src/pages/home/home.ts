@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, NgZone, ViewChild} from '@angular/core';
 import {NavController} from 'ionic-angular';
 import SunCalc from 'suncalc';
 import {HomeService} from "../../services/home-service";
@@ -12,8 +12,13 @@ export class HomePage {
 
   @ViewChild('map') mapRef: ElementRef;
   currentForecast = [];
+  visibleSlides = false;
 
-  constructor(public navCtrl: NavController, private homeService: HomeService) {
+  constructor(
+    public navCtrl: NavController,
+    private homeService: HomeService,
+    private zone: NgZone
+  ) {
 
   }
 
@@ -80,8 +85,21 @@ export class HomePage {
         res => {
           console.log(res);
           this.currentForecast = res.forecasts;
-          console.log(this.currentForecast)
-          alert(res.forecasts[1].pv_estimate)
+          console.log(this.currentForecast);
+        },
+        err => {
+
+        },
+        () =>{
+          console.log(this.visibleSlides);
+          this.zone.run(()=>{
+            this.visibleSlides = true;
+            console.log(this.visibleSlides);
+          });
+
+
+
+
         }
       );
 

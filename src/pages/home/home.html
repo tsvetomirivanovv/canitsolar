@@ -28,7 +28,7 @@
     <ion-col col-12 id="col-2-forecast">
       <ion-slides pager style="height: initial">
 
-        <ion-slide style="background-color: grey">
+        <ion-slide style="background-color: grey" *ngIf="visibleSlides">
           <ion-list>
             <ion-item *ngFor="let forecast of currentForecast">{{forecast.pv_estimate}}</ion-item>
           </ion-list>
@@ -62,10 +62,11 @@
       </ion-slides>
     </ion-col>
     <ion-col col-2>
-      3 of 4asdasdasdasdasd
+      3
     </ion-col>
-    <ion-col col-4>
-      4 of 4asdasdasdasdas
+    <ion-col col-4 *ngIf="visibleSlides">
+      4
     </ion-col>
+
   </ion-row>
 </ion-grid>
