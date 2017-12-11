@@ -88,7 +88,12 @@ export class HomePage {
           console.log(this.currentForecast);
         },
         err => {
-
+          let alert = this.alertCtrl.create({
+            title: 'New Friend!',
+            subTitle: err,
+            buttons: ['OK']
+          });
+          alert.present();
         },
         () => {
           console.log(this.visibleSlides);
