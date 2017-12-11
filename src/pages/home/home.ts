@@ -89,8 +89,8 @@ export class HomePage {
         },
         err => {
           let alert = this.alertCtrl.create({
-            title: 'New Friend!',
-            subTitle: err,
+            title: 'ERROR!',
+            subTitle: JSON.stringify(err),
             buttons: ['OK']
           });
           alert.present();
