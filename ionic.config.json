@@ -8,7 +8,7 @@
   "proxies": [
     {
       "path": "/solcast",
-      "proxyUrl": "https://api.solcast.com.au/pv_power/forecasts"
+      "proxyUrl": "https://api.solcast.com.au/pv_power/forecasts?longitude=26.008&latitude=42.501&format=json&capacity=1000&api_key=CvZ5vC7gnB2z3utjaML4trwwlZwnL2XI"
     }
   ]
 }
