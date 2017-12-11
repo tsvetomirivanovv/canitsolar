@@ -30,7 +30,7 @@ export class HomeService {
     // headers.set('Authorization','TEST123');
     console.log(headers);
     return this.http.get<any>
-    ('https://api.solcast.com.au/pv_power/forecasts?longitude=26.008&latitude=42.501&format=json&capacity=1000&api_key=CvZ5vC7gnB2z3utjaML4trwwlZwnL2XI');
+    ('/solcast/');
   }
 
 //  https://api.solcast.com.au/pv_power/forecasts?longitude=26.008&latitude=42.501&capacity=1000
