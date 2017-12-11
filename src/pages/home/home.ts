@@ -1,7 +1,8 @@
-import {ChangeDetectorRef, Component, ElementRef, NgZone, ViewChild} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {Component, ElementRef, NgZone, ViewChild} from '@angular/core';
+import {AlertController, NavController} from 'ionic-angular';
 import SunCalc from 'suncalc';
 import {HomeService} from "../../services/home-service";
+
 declare var google: any;
 
 @Component({
@@ -14,11 +15,10 @@ export class HomePage {
   currentForecast = [];
   visibleSlides = false;
 
-  constructor(
-    public navCtrl: NavController,
-    private homeService: HomeService,
-    private zone: NgZone
-  ) {
+  constructor(public navCtrl: NavController,
+              private homeService: HomeService,
+              private zone: NgZone,
+              public alertCtrl: AlertController) {
 
   }
 
@@ -72,16 +72,16 @@ export class HomePage {
       });
 
       // Auto open marker info window when created
-      setTimeout(()=>{
-        mapMarker1InfoWindow.open(map,mapMarker1);
-      },100);
+      setTimeout(() => {
+        mapMarker1InfoWindow.open(map, mapMarker1);
+      }, 100);
 
       // Manual open/hide info window for marker
       mapMarker1.addListener('click', function (event) {
-        mapMarker1InfoWindow.open(map,mapMarker1);
+        mapMarker1InfoWindow.open(map, mapMarker1);
       });
 
-      this.homeService.getLocationPowerEstimate(event.latLng.lat().toString(),event.latLng.lng().toString(),'1000','json').subscribe(
+      this.homeService.getLocationPowerEstimate(event.latLng.lat().toString(), event.latLng.lng().toString(), '1000', 'json').subscribe(
         res => {
           console.log(res);
           this.currentForecast = res.forecasts;
@@ -90,14 +90,20 @@ export class HomePage {
         err => {
 
         },
-        () =>{
+        () => {
           console.log(this.visibleSlides);
-          this.zone.run(()=>{
+          this.zone.run(() => {
             this.visibleSlides = true;
             console.log(this.visibleSlides);
+
+            let alert = this.alertCtrl.create({
+              title: 'New Friend!',
+              subTitle: this.currentForecast.toString(),
+              buttons: ['OK']
+            });
+            alert.present();
+
           });
-
-
 
 
         }
@@ -108,7 +114,7 @@ export class HomePage {
     });
   }
 
-  showMapMarkerInfoWindow(longitude,latitude,capacity,format) {
+  showMapMarkerInfoWindow(longitude, latitude, capacity, format) {
   }
 
 }
