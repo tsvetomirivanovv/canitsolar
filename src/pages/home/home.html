@@ -1,66 +1,93 @@
-<!--<ion-header>-->
-<!--<ion-navbar>-->
-<!--<ion-title>-->
-<!--Landing page-->
-<!--</ion-title>-->
-<!--</ion-navbar>-->
-<!--</ion-header>-->
-
-<ion-content>
-</ion-content>
-
-
-<!--<ion-grid>-->
-<!--<ion-row>-->
-<!--<ion-col col-12 col-sm-9 col-md-6 col-lg-4 col-xl-3>-->
-<!--test-->
-<!--</ion-col>-->
-<!--</ion-row>-->
-<!--</ion-grid>-->
-
 <ion-grid>
+  <!--ROW 1-->
   <ion-row>
+
+    <!--COL 1-->
     <ion-col col-12 id="col-1-map">
-      <ion-content>
-        <div #map id="map"></div>
-      </ion-content>
+      <div #map id="map"></div>
     </ion-col>
-    <ion-col col-12 id="col-2-forecast">
-      <ion-slides pager style="height: initial">
+    <!--COL 1-->
 
-        <ion-slide style="background-color: grey" *ngIf="visibleSlides">
-          <ion-list>
-            <ion-item *ngFor="let forecast of currentForecast">{{forecast.pv_estimate}}</ion-item>
-          </ion-list>
+    <!--COL 2-->
+    <ion-col col-12 id="col-2-forecast" *ngIf="mapLoaded">
+      <ion-scroll scrollX="true" style="width: 100%; height: 200px">
+        <div class="inner">
 
-        </ion-slide>
+          <ion-card>
+            <ion-scroll scrollY="true" style=" height: 100%">
+              <ion-card-header>
+                Today {{currentDate1 | date : 'yyyy/MM/dd' }}
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list>
+                  <ion-item *ngFor="let forecast of currentDate1Forecast">
+                    <span *ngIf="forecast.period_end.includes(currentDate1 | date : 'yyyy-MM-dd'  )">
+                      {{forecast.period_end | slice:11:16}} {{forecast.pv_estimate}}
+                    </span>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-scroll>
+          </ion-card>
 
-        <ion-slide style="background-color: grey">
-          <h2>Slide 2s</h2>
-        </ion-slide>
+          <ion-card>
+            <ion-scroll scrollY="true" style=" height: 100%">
+              <ion-card-header>
+                {{currentDate2 | date : 'yyyy/MM/dd' }}
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list>
+                  <ion-item *ngFor="let forecast of currentDate2Forecast">
+                    <span *ngIf="forecast.period_end.includes(currentDate2 | date : 'yyyy-MM-dd'  )">
+                      {{forecast.period_end | slice:11:16}} {{forecast.pv_estimate}}
+                    </span>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-scroll>
+          </ion-card>
 
-        <ion-slide style="background-color: grey">
-          <h2>Slide 3</h2>
-        </ion-slide>
+          <ion-card>
+            <ion-scroll scrollY="true" style=" height: 100%">
+              <ion-card-header>
+                {{currentDate3 | date : 'yyyy/MM/dd' }}
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list>
+                  <ion-item *ngFor="let forecast of currentDate3Forecast">
+                    <span *ngIf="forecast.period_end.includes(currentDate3 | date : 'yyyy-MM-dd'  )">
+                      {{forecast.period_end | slice:11:16}} {{forecast.pv_estimate}}
+                    </span>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-scroll>
+          </ion-card>
 
-        <ion-slide style="background-color: grey">
-          <h2>Slide 4</h2>
-        </ion-slide>
+          <ion-card>
+            <ion-scroll scrollY="true" style=" height: 100%">
+              <ion-card-header>
+                {{currentDate4 | date : 'yyyy/MM/dd' }}
+              </ion-card-header>
+              <ion-card-content>
+                <ion-list>
+                  <ion-item *ngFor="let forecast of currentDate4Forecast">
+                    <span *ngIf="forecast.period_end.includes(currentDate4 | date : 'yyyy-MM-dd'  )">
+                      {{forecast.period_end | slice:11:16}} {{forecast.pv_estimate}}
+                    </span>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-scroll>
+          </ion-card>
 
-        <ion-slide style="background-color: grey">
-          <h2>Slide 5</h2>
-        </ion-slide>
 
-        <ion-slide style="background-color: grey">
-          <h2>Slide 6</h2>
-        </ion-slide>
-
-        <ion-slide style="background-color: grey">
-          <h2>Slide 7</h2>
-        </ion-slide>
-
-      </ion-slides>
+        </div>
+      </ion-scroll>
     </ion-col>
+    <!--COL 2-->
+
+
     <ion-col col-2>
       3
     </ion-col>
@@ -70,3 +97,4 @@
 
   </ion-row>
 </ion-grid>
+<!--<ion-item *ngFor="let forecast of currentForecast">{{forecast.pv_estimate}}</ion-item>-->

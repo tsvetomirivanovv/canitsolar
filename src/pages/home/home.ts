@@ -2,6 +2,7 @@ import {Component, ElementRef, NgZone, ViewChild} from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import SunCalc from 'suncalc';
 import {HomeService} from "../../services/home-service";
+import {DatePipe} from "@angular/common";
 
 declare var google: any;
 
@@ -14,15 +15,30 @@ export class HomePage {
   @ViewChild('map') mapRef: ElementRef;
   currentForecast = [];
   visibleSlides = false;
+  mapLoaded = false;
+
+  currentDate1 = new Date();
+  currentDate2 = new Date();
+  currentDate3 = new Date();
+  currentDate4 = new Date();
+
+  currentDate1Forecast = [];
+  currentDate2Forecast = [];
+  currentDate3Forecast = [];
+  currentDate4Forecast = [];
+
 
   constructor(public navCtrl: NavController,
               private homeService: HomeService,
               private zone: NgZone,
-              public alertCtrl: AlertController) {
-
+              public alertCtrl: AlertController,
+              private datePipe: DatePipe) {
   }
 
   ionViewDidLoad() {
+    this.currentDate2.setDate(this.currentDate2.getDate() + 1);
+    this.currentDate3.setDate(this.currentDate3.getDate() + 2);
+    this.currentDate4.setDate(this.currentDate4.getDate() + 3);
     this.initMap();
   }
 
@@ -83,9 +99,33 @@ export class HomePage {
 
       this.homeService.getLocationPowerEstimate(event.latLng.lat().toString(), event.latLng.lng().toString(), '1000', 'json').subscribe(
         res => {
-          console.log(res);
-          this.currentForecast = res.forecasts;
-          console.log(this.currentForecast);
+          for (let i = 0; i< res.forecasts.length; i++){
+            let date1 = this.datePipe.transform(this.currentDate1,'yyyy-MM-dd');
+            let date2 = this.datePipe.transform(this.currentDate2,'yyyy-MM-dd');
+            let date3 = this.datePipe.transform(this.currentDate3,'yyyy-MM-dd');
+            let date4 = this.datePipe.transform(this.currentDate4,'yyyy-MM-dd');
+
+
+
+            if (res.forecasts[i].period_end.includes(date1)){
+              this.currentDate1Forecast.push(res.forecasts[i]);
+            }
+
+            if (res.forecasts[i].period_end.includes(date2)){
+              this.currentDate2Forecast.push(res.forecasts[i]);
+            }
+
+            if (res.forecasts[i].period_end.includes(date3)){
+              this.currentDate3Forecast.push(res.forecasts[i]);
+            }
+
+            if (res.forecasts[i].period_end.includes(date4)){
+              this.currentDate4Forecast.push(res.forecasts[i]);
+            }
+
+
+
+          }
         },
         err => {
           let alert = this.alertCtrl.create({
@@ -96,18 +136,15 @@ export class HomePage {
           alert.present();
         },
         () => {
-          console.log(this.visibleSlides);
+          console.log(this.currentDate1Forecast);
+          console.log(this.currentDate2Forecast);
+          console.log(this.currentDate3Forecast);
+          console.log(this.currentDate4Forecast);
+
+          // console.log(this.visibleSlides);
           this.zone.run(() => {
-            this.visibleSlides = true;
-            console.log(this.visibleSlides);
-
-            let alert = this.alertCtrl.create({
-              title: 'New Friend!',
-              subTitle: this.currentForecast.toString(),
-              buttons: ['OK']
-            });
-            alert.present();
-
+            this.mapLoaded = true;
+            // console.log(this.visibleSlides);
           });
 
 
