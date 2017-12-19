@@ -11,15 +11,28 @@ export class HomeService {
   }
 
   // Get all companies total shares
-  getLocationPowerEstimate(latitude, longitude, capacity, format): Observable<any> {
-    return this.http.get<any>
-    ('https://api.solcast.com.au/pv_power/forecasts' +
-      '?longitude=' + longitude +
-      '&latitude=' + latitude +
-      '&capacity=' + capacity +
-      '&format=' + format +
-      '&api_key=' + this.api_key
-    );
+  getLocationPowerEstimate(latitude, longitude, capacity, format, tilt?): Observable<any> {
+    if (tilt == undefined){
+      return this.http.get<any>
+      ('https://api.solcast.com.au/pv_power/forecasts' +
+        '?longitude=' + longitude +
+        '&latitude=' + latitude +
+        '&capacity=' + capacity +
+        '&format=' + format +
+        '&api_key=' + this.api_key
+      );
+    } else {
+      return this.http.get<any>
+      ('https://api.solcast.com.au/pv_power/forecasts' +
+        '?longitude=' + longitude +
+        '&latitude=' + latitude +
+        '&capacity=' + capacity +
+        '&format=' + format +
+        '&tilt=' + tilt +
+        '&api_key=' + this.api_key
+      );
+    }
+
   }
 
 }

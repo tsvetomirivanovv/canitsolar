@@ -4,7 +4,7 @@ import SunCalc from 'suncalc';
 import {DatePipe} from "@angular/common";
 import {Storage} from "@ionic/storage";
 import {HomeService} from "../../services/home-service";
-import { ToastController } from 'ionic-angular';
+import {ToastController} from 'ionic-angular';
 
 declare var google: any;
 
@@ -21,6 +21,7 @@ export class ForecastPage {
   currentCapacity = 0;
   currentLongitude = 0;
   currentLatitude = 0;
+  currentTilt = '';
 
   currentDate1 = new Date();
   currentDate2 = new Date();
@@ -274,6 +275,12 @@ export class ForecastPage {
               () => {
                 // console.log(this.visibleSlides);
                 this.zone.run(() => {
+                  let toast = this.toastCtrl.create({
+                    message: 'Capacity updated => Data refreshed!',
+                    duration: 3000,
+                    position: 'top'
+                  });
+                  toast.present();
                   this.mapLoaded = true;
                   // console.log(this.visibleSlides);
                 });
@@ -342,6 +349,96 @@ export class ForecastPage {
       position: 'top'
     });
     toast.present();
+  }
+
+  advanceSettings() {
+
+    let prompt = this.alertCtrl.create({
+      title: 'Panel system tilt angle',
+      message: "Enter tilt angle from 0 - 90. Default is 23 degrees",
+      inputs: [
+        {
+          name: 'tilt',
+          placeholder: 'Tilt',
+          type: 'number'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Set',
+          handler: data => {
+
+            this.currentTilt = data.tilt;
+
+            this.homeService.getLocationPowerEstimate(this.currentLatitude.toString(), this.currentLongitude.toString(), this.currentCapacity, 'json', this.currentTilt).subscribe(
+              res => {
+
+                // Reset the list values
+                this.zone.run(() => {
+                  this.currentDate1Forecast = [];
+                  this.currentDate2Forecast = [];
+                  this.currentDate3Forecast = [];
+                  this.currentDate4Forecast = [];
+                  this.mapLoaded = false;
+                });
+
+                for (let i = 0; i < res.forecasts.length; i++) {
+                  let date1 = this.datePipe.transform(this.currentDate1, 'yyyy-MM-dd');
+                  let date2 = this.datePipe.transform(this.currentDate2, 'yyyy-MM-dd');
+                  let date3 = this.datePipe.transform(this.currentDate3, 'yyyy-MM-dd');
+                  let date4 = this.datePipe.transform(this.currentDate4, 'yyyy-MM-dd');
+
+                  if (res.forecasts[i].period_end.includes(date1)) {
+                    this.currentDate1Forecast.push(res.forecasts[i]);
+                  }
+
+                  if (res.forecasts[i].period_end.includes(date2)) {
+                    this.currentDate2Forecast.push(res.forecasts[i]);
+                  }
+
+                  if (res.forecasts[i].period_end.includes(date3)) {
+                    this.currentDate3Forecast.push(res.forecasts[i]);
+                  }
+
+                  if (res.forecasts[i].period_end.includes(date4)) {
+                    this.currentDate4Forecast.push(res.forecasts[i]);
+                  }
+
+                }
+              },
+              err => {
+                let alert = this.alertCtrl.create({
+                  title: 'ERROR!',
+                  subTitle: 'No internet access!',
+                  buttons: ['OK']
+                });
+                alert.present();
+              },
+              () => {
+                // console.log(this.visibleSlides);
+                this.zone.run(() => {
+                  let toast = this.toastCtrl.create({
+                    message: 'Tilt updated => Data refreshed!',
+                    duration: 3000,
+                    position: 'top'
+                  });
+                  toast.present();
+                  this.mapLoaded = true;
+                  // console.log(this.visibleSlides);
+                });
+              }
+            );
+          }
+        },
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 
 }
