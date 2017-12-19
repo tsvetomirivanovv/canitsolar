@@ -1,25 +1,19 @@
-page-home {
-  #map{
-    height: 100%;
-    width: 100%;
-  }
+page-history {
 
-  #col-1-map{
-    height: 300px;
-  }
 
   #col-2-forecast{
     height: 200px;
+    padding: 0;
   }
 
   .inner{
     display: flex;
     height: 100%;
     width: fit-content;
-    background-color: #ffe1ca;
+    background-color: #b6b2b6;
     ion-card{
       width: 250px;
-      height: 180px;
+      height: 37vh;
       margin: 5px;
       .item-md{
         padding-left: 0;

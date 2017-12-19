@@ -1,0 +1,115 @@
+<ion-content *ngIf="showHistoryPage" style="height: 86vh">
+
+  <ion-card *ngFor="let forecast of storageForecasts; let index=index;">
+
+    <ion-card-header>
+      <ion-icon name="ios-sunny-outline" item-start></ion-icon>
+      {{forecast.created}}
+      <ion-item>
+        <ion-input type="text" (input)="saveNote($event.target.value,forecast.created)" [(ngModel)]="forecast.note" placeholder="Note:"></ion-input>
+      </ion-item>
+
+    </ion-card-header>
+
+    <ion-card-content>
+      <button ion-item (click)="expandForecast(forecast)">
+        <span *ngIf="forecast.showForecast == undefined || forecast.showForecast == false">Expand forecast</span>
+        <span *ngIf="forecast.showForecast == true">Hide forecast</span>
+        <ion-icon name="ios-arrow-dropdown-outline" item-end></ion-icon>
+      </button>
+
+      <ion-card-content *ngIf="forecast.showForecast">
+
+        <ion-col col-12 id="col-2-forecast">
+          <ion-scroll scrollX="true" style="width: 100%; height: 38vh">
+            <div class="inner">
+
+              <ion-card>
+                <ion-scroll scrollY="true" style=" height: 100%">
+                  <ion-card-content>
+                    <span style="margin-left: 4px">Time:</span>
+                    <span style="margin-left: 55px">Estimate(Watts):</span>
+                    <ion-list>
+                      <ion-item *ngFor="let savedForecast of forecast.date1">
+                    <span class="forecastTime">
+                      {{savedForecast.period_end | slice:11:16}}
+                    </span>
+                        <span class="forecastPower">
+                      {{savedForecast.pv_estimate | number: '1.2-3'}}
+                    </span>
+                      </ion-item>
+                    </ion-list>
+                  </ion-card-content>
+                </ion-scroll>
+              </ion-card>
+
+              <ion-card>
+                <ion-scroll scrollY="true" style=" height: 100%">
+                  <ion-card-content>
+                    <span style="margin-left: 4px">Time:</span>
+                    <span style="margin-left: 55px">Estimate(Watts):</span>
+                    <ion-list>
+                      <ion-item *ngFor="let savedForecast of forecast.date2">
+                    <span class="forecastTime">
+                      {{savedForecast.period_end | slice:11:16}}
+                    </span>
+                        <span class="forecastPower">
+                      {{savedForecast.pv_estimate | number: '1.2-3'}}
+                    </span>
+                      </ion-item>
+                    </ion-list>
+                  </ion-card-content>
+                </ion-scroll>
+              </ion-card>
+
+              <ion-card>
+                <ion-scroll scrollY="true" style=" height: 100%">
+                  <ion-card-content>
+                    <span style="margin-left: 4px">Time:</span>
+                    <span style="margin-left: 55px">Estimate(Watts):</span>
+                    <ion-list>
+                      <ion-item *ngFor="let savedForecast of forecast.date3">
+                    <span class="forecastTime">
+                      {{savedForecast.period_end | slice:11:16}}
+                    </span>
+                        <span class="forecastPower">
+                      {{savedForecast.pv_estimate | number: '1.2-3'}}
+                    </span>
+                      </ion-item>
+                    </ion-list>
+                  </ion-card-content>
+                </ion-scroll>
+              </ion-card>
+
+
+              <ion-card>
+                <ion-scroll scrollY="true" style=" height: 100%">
+                  <ion-card-content>
+                    <span style="margin-left: 4px">Time:</span>
+                    <span style="margin-left: 55px">Estimate(Watts):</span>
+                    <ion-list>
+                      <ion-item *ngFor="let savedForecast of forecast.date4">
+                    <span class="forecastTime">
+                      {{savedForecast.period_end | slice:11:16}}
+                    </span>
+                        <span class="forecastPower">
+                      {{savedForecast.pv_estimate | number: '1.2-3'}}
+                    </span>
+                      </ion-item>
+                    </ion-list>
+                  </ion-card-content>
+                </ion-scroll>
+              </ion-card>
+
+            </div>
+
+
+          </ion-scroll>
+        </ion-col>
+
+      </ion-card-content>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

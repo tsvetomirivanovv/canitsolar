@@ -10,23 +10,39 @@ import {LogoPage} from "../pages/logo/logo";
 import {HomeService} from "../services/home-service";
 import {HttpClientModule} from "@angular/common/http";
 import {DatePipe} from "@angular/common";
+import {IonicStorageModule} from "@ionic/storage";
+import {HistoryPage} from "../pages/history/history";
+import {TabsPage} from "../pages/tabs/tabs";
+import {ForecastPage} from "../pages/forecast/forecast";
+import {SettingsPage} from "../pages/settings/settings";
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     LogoPage,
+    ForecastPage,
+    HistoryPage,
+    SettingsPage,
+    TabsPage
+
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     HomePage,
     LogoPage,
+    ForecastPage,
+    HistoryPage,
+    SettingsPage,
+    TabsPage
+
   ],
   providers: [
     StatusBar,

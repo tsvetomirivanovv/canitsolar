@@ -1,20 +1,22 @@
 import {Component, ElementRef, NgZone, ViewChild} from '@angular/core';
 import {AlertController, NavController} from 'ionic-angular';
 import SunCalc from 'suncalc';
-import {HomeService} from "../../services/home-service";
 import {DatePipe} from "@angular/common";
 import {Storage} from "@ionic/storage";
+import {HomeService} from "../../services/home-service";
+import { ToastController } from 'ionic-angular';
 
 declare var google: any;
 
+
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'page-forecast',
+  templateUrl: 'forecast.html',
 })
-export class HomePage {
+export class ForecastPage {
+
 
   @ViewChild('map') mapRef: ElementRef;
-  currentForecast = [];
   mapLoaded = false;
   currentCapacity = 0;
   currentLongitude = 0;
@@ -30,14 +32,14 @@ export class HomePage {
   currentDate3Forecast = [];
   currentDate4Forecast = [];
 
-  tabHistory: any;
 
   constructor(public navCtrl: NavController,
               private homeService: HomeService,
               private zone: NgZone,
               public alertCtrl: AlertController,
               private datePipe: DatePipe,
-              private storage: Storage) {
+              private storage: Storage,
+              public toastCtrl: ToastController) {
   }
 
   ionViewDidLoad() {
@@ -76,8 +78,7 @@ export class HomePage {
   addMapMarker(map) {
 
 
-    // set a key/value
-    this.storage.set('name', 'Max');
+
 
 
     // Create new empty marker and info window
@@ -97,10 +98,19 @@ export class HomePage {
         // Get sunrise time on map click
         let times = SunCalc.getTimes(new Date(), event.latLng.lat(), event.latLng.lng());
         console.log(times);
+        let mapMarker1InfoContent =
+          "Sunrise: " + times.sunrise.toISOString().slice(11, 19) + "<br/>" +
+          "Sunrise end: " + times.sunriseEnd.toISOString().slice(11, 19) + "<br/>" +
+          "Noon peak: " + times.solarNoon.toISOString().slice(11, 19) + "<br/>" +
+          "Sunset start: " + times.sunsetStart.toISOString().slice(11, 19) + "<br/>" +
+          "Sunset: " + times.sunset.toISOString().slice(11, 19) + "<br/>";
+
+
+        console.log(mapMarker1InfoContent);
 
         // Create marker info window
         mapMarker1InfoWindow = new google.maps.InfoWindow({
-          content: times.sunrise.toString()
+          content: mapMarker1InfoContent
         });
 
         // Auto open marker info window when created
@@ -167,7 +177,6 @@ export class HomePage {
                         this.currentDate4Forecast.push(res.forecasts[i]);
                       }
 
-
                     }
                   },
                   err => {
@@ -179,11 +188,6 @@ export class HomePage {
                     alert.present();
                   },
                   () => {
-                    console.log(this.currentDate1Forecast);
-                    console.log(this.currentDate2Forecast);
-                    console.log(this.currentDate3Forecast);
-                    console.log(this.currentDate4Forecast);
-
                     // console.log(this.visibleSlides);
                     this.zone.run(() => {
                       this.mapLoaded = true;
@@ -204,70 +208,140 @@ export class HomePage {
   }
 
 
-  refreshCapacity(newCapacity) {
-    this.currentCapacity = newCapacity;
+  refreshCapacity() {
 
-    this.homeService.getLocationPowerEstimate(this.currentLatitude.toString(), this.currentLongitude.toString(), this.currentCapacity, 'json').subscribe(
-      res => {
+    let prompt = this.alertCtrl.create({
+      title: 'Panel system capacity',
+      message: "Enter new capacity",
+      inputs: [
+        {
+          name: 'capacity',
+          placeholder: 'Capacity',
+          type: 'number'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Set',
+          handler: data => {
 
-        // Reset the list values
-        this.zone.run(() => {
-          this.currentDate1Forecast = [];
-          this.currentDate2Forecast = [];
-          this.currentDate3Forecast = [];
-          this.currentDate4Forecast = [];
-          this.mapLoaded = false;
-        });
+            this.currentCapacity = data.capacity;
 
-        for (let i = 0; i < res.forecasts.length; i++) {
-          let date1 = this.datePipe.transform(this.currentDate1, 'yyyy-MM-dd');
-          let date2 = this.datePipe.transform(this.currentDate2, 'yyyy-MM-dd');
-          let date3 = this.datePipe.transform(this.currentDate3, 'yyyy-MM-dd');
-          let date4 = this.datePipe.transform(this.currentDate4, 'yyyy-MM-dd');
+            this.homeService.getLocationPowerEstimate(this.currentLatitude.toString(), this.currentLongitude.toString(), this.currentCapacity, 'json').subscribe(
+              res => {
 
+                // Reset the list values
+                this.zone.run(() => {
+                  this.currentDate1Forecast = [];
+                  this.currentDate2Forecast = [];
+                  this.currentDate3Forecast = [];
+                  this.currentDate4Forecast = [];
+                  this.mapLoaded = false;
+                });
 
-          if (res.forecasts[i].period_end.includes(date1)) {
-            this.currentDate1Forecast.push(res.forecasts[i]);
+                for (let i = 0; i < res.forecasts.length; i++) {
+                  let date1 = this.datePipe.transform(this.currentDate1, 'yyyy-MM-dd');
+                  let date2 = this.datePipe.transform(this.currentDate2, 'yyyy-MM-dd');
+                  let date3 = this.datePipe.transform(this.currentDate3, 'yyyy-MM-dd');
+                  let date4 = this.datePipe.transform(this.currentDate4, 'yyyy-MM-dd');
+
+                  if (res.forecasts[i].period_end.includes(date1)) {
+                    this.currentDate1Forecast.push(res.forecasts[i]);
+                  }
+
+                  if (res.forecasts[i].period_end.includes(date2)) {
+                    this.currentDate2Forecast.push(res.forecasts[i]);
+                  }
+
+                  if (res.forecasts[i].period_end.includes(date3)) {
+                    this.currentDate3Forecast.push(res.forecasts[i]);
+                  }
+
+                  if (res.forecasts[i].period_end.includes(date4)) {
+                    this.currentDate4Forecast.push(res.forecasts[i]);
+                  }
+
+                }
+              },
+              err => {
+                let alert = this.alertCtrl.create({
+                  title: 'ERROR!',
+                  subTitle: 'No internet access!',
+                  buttons: ['OK']
+                });
+                alert.present();
+              },
+              () => {
+                // console.log(this.visibleSlides);
+                this.zone.run(() => {
+                  this.mapLoaded = true;
+                  // console.log(this.visibleSlides);
+                });
+              }
+            );
           }
-
-          if (res.forecasts[i].period_end.includes(date2)) {
-            this.currentDate2Forecast.push(res.forecasts[i]);
+        },
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
           }
-
-          if (res.forecasts[i].period_end.includes(date3)) {
-            this.currentDate3Forecast.push(res.forecasts[i]);
-          }
-
-          if (res.forecasts[i].period_end.includes(date4)) {
-            this.currentDate4Forecast.push(res.forecasts[i]);
-          }
-
-
         }
-      },
-      err => {
-        let alert = this.alertCtrl.create({
-          title: 'ERROR!',
-          subTitle: 'No internet access!',
-          buttons: ['OK']
+      ]
+    });
+    prompt.present();
+  }
+
+  saveForecast() {
+    this.storage.get('forecast').then((res) => {
+      if (res == null) {
+        this.storage.set('forecast', []).then(() => {
+          let savedForecasts = this.storage.get('forecast');
+          let date = this.datePipe.transform(new Date(), 'yyyy-MM-dd:HH:mm:ss');
+          let newForecast = {
+            "created": date,
+            "note": "",
+            "date1": this.currentDate1Forecast,
+            "date2": this.currentDate2Forecast,
+            "date3": this.currentDate3Forecast,
+            "date4": this.currentDate4Forecast,
+          };
+          savedForecasts.then((res) => {
+            res.push(newForecast);
+          });
+          this.storage.set('forecast', savedForecasts);
+          this.savedForecastToast();
+
         });
-        alert.present();
-      },
-      () => {
-        console.log(this.currentDate1Forecast);
-        console.log(this.currentDate2Forecast);
-        console.log(this.currentDate3Forecast);
-        console.log(this.currentDate4Forecast);
-
-        // console.log(this.visibleSlides);
-        this.zone.run(() => {
-          this.mapLoaded = true;
-          // console.log(this.visibleSlides);
-        });
-
-
       }
-    );
+      else {
+        let savedForecasts = this.storage.get('forecast');
+        let date = this.datePipe.transform(new Date(), 'yyyy-MM-dd:HH:mm:ss');
+        let newForecast = {
+          "created": date,
+          "note": "",
+          "date1": this.currentDate1Forecast,
+          "date2": this.currentDate2Forecast,
+          "date3": this.currentDate3Forecast,
+          "date4": this.currentDate4Forecast,
+        };
+        savedForecasts.then((res) => {
+          res.push(newForecast);
+        });
+        this.storage.set('forecast', savedForecasts);
+        this.savedForecastToast();
+      }
+    });
+
+  }
+
+  savedForecastToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Forecast was saved',
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
   }
 
 }

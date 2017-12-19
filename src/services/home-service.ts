@@ -11,11 +11,11 @@ export class HomeService {
   }
 
   // Get all companies total shares
-  getLocationPowerEstimate(longitude, latitude, capacity, format): Observable<any> {
+  getLocationPowerEstimate(latitude, longitude, capacity, format): Observable<any> {
     return this.http.get<any>
     ('https://api.solcast.com.au/pv_power/forecasts' +
-      '?longitude=' + latitude +
-      '&latitude=' + longitude +
+      '?longitude=' + longitude +
+      '&latitude=' + latitude +
       '&capacity=' + capacity +
       '&format=' + format +
       '&api_key=' + this.api_key
