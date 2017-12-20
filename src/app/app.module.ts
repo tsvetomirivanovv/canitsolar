@@ -5,8 +5,6 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {StatusBar} from '@ionic-native/status-bar';
 
 import {MyApp} from './app.component';
-import {HomePage} from '../pages/home/home';
-import {LogoPage} from "../pages/logo/logo";
 import {HomeService} from "../services/home-service";
 import {HttpClientModule} from "@angular/common/http";
 import {DatePipe} from "@angular/common";
@@ -19,8 +17,6 @@ import {SettingsPage} from "../pages/settings/settings";
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
-    LogoPage,
     ForecastPage,
     HistoryPage,
     SettingsPage,
@@ -36,8 +32,6 @@ import {SettingsPage} from "../pages/settings/settings";
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
-    LogoPage,
     ForecastPage,
     HistoryPage,
     SettingsPage,

@@ -1,7 +1,9 @@
 <ion-content *ngIf="showHistoryPage" style="height: 86vh">
 
+  <!--Generate card-->
   <ion-card *ngFor="let forecast of storageForecasts; let index=index;">
 
+    <!--Display card date-->
     <ion-card-header>
       <ion-icon name="ios-sunny-outline" item-start></ion-icon>
       {{forecast.created}}
@@ -11,6 +13,7 @@
 
     </ion-card-header>
 
+    <!--Display card icon-->
     <ion-card-content>
       <button ion-item (click)="expandForecast(forecast)">
         <span *ngIf="forecast.showForecast == undefined || forecast.showForecast == false">Expand forecast</span>
@@ -18,6 +21,7 @@
         <ion-icon name="ios-arrow-dropdown-outline" item-end></ion-icon>
       </button>
 
+      <!--Generate viewable forecast-->
       <ion-card-content *ngIf="forecast.showForecast">
 
         <ion-col col-12 id="col-2-forecast">

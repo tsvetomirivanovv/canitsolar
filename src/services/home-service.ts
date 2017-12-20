@@ -5,6 +5,7 @@ import {Observable} from "rxjs/Observable";
 @Injectable()
 export class HomeService {
 
+  // API KEY FOR SOLCAST
   private api_key: string = 'CvZ5vC7gnB2z3utjaML4trwwlZwnL2XI';
 
   constructor(private http: HttpClient) {

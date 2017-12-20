@@ -12,10 +12,12 @@
 
       <!--COL 2-->
       <ion-col col-12 id="col-2-forecast" *ngIf="mapLoaded">
+        <!--Horizontal Scroll of the cards-->
         <ion-scroll scrollX="true" style="width: 100%; height: 38vh">
           <div class="inner">
 
             <ion-card>
+              <!--Vertical scroll inside the card-->
               <ion-scroll scrollY="true" style=" height: 100%">
                 <ion-card-header>
                 <span class="forecastDate">

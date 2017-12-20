@@ -48,11 +48,6 @@ export class ForecastPage {
     this.currentDate3.setDate(this.currentDate3.getDate() + 2);
     this.currentDate4.setDate(this.currentDate4.getDate() + 3);
     this.initMap();
-
-    // Or to get a key/value pair
-    this.storage.get('name').then((val) => {
-      console.log('Your name is', val);
-    });
   }
 
   // Initialization of the google map
@@ -72,16 +67,10 @@ export class ForecastPage {
 
     // Add new marker on map left click
     this.addMapMarker(map);
-
   }
 
 
   addMapMarker(map) {
-
-
-
-
-
     // Create new empty marker and info window
     let mapMarker1 = new google.maps.Marker;
     let mapMarker1InfoWindow = new google.maps.InfoWindow;
@@ -107,8 +96,6 @@ export class ForecastPage {
           "Sunset: " + times.sunset.toISOString().slice(11, 19) + "<br/>";
 
 
-        console.log(mapMarker1InfoContent);
-
         // Create marker info window
         mapMarker1InfoWindow = new google.maps.InfoWindow({
           content: mapMarker1InfoContent
@@ -124,6 +111,7 @@ export class ForecastPage {
           mapMarker1InfoWindow.open(map, mapMarker1);
         });
 
+        // Alert for displaying the input for capacity
         let prompt = this.alertCtrl.create({
           title: 'Panel system capacity',
           message: "Enter the capacity of your system in Watts",
@@ -139,6 +127,7 @@ export class ForecastPage {
               text: 'Set',
               handler: data => {
 
+                // Get the capacity input from the alert
                 this.currentCapacity = data.capacity;
                 this.currentLongitude = event.latLng.lng();
                 this.currentLatitude = event.latLng.lat();
@@ -146,7 +135,7 @@ export class ForecastPage {
                 this.homeService.getLocationPowerEstimate(event.latLng.lat().toString(), event.latLng.lng().toString(), data.capacity, 'json').subscribe(
                   res => {
 
-                    // Reset the list values
+                    // Update view
                     this.zone.run(() => {
                       this.currentDate1Forecast = [];
                       this.currentDate2Forecast = [];
@@ -189,12 +178,9 @@ export class ForecastPage {
                     alert.present();
                   },
                   () => {
-                    // console.log(this.visibleSlides);
                     this.zone.run(() => {
                       this.mapLoaded = true;
-                      // console.log(this.visibleSlides);
                     });
-
 
                   }
                 );
@@ -209,8 +195,8 @@ export class ForecastPage {
   }
 
 
+  // Set new capacity
   refreshCapacity() {
-
     let prompt = this.alertCtrl.create({
       title: 'Panel system capacity',
       message: "Enter new capacity",
@@ -273,7 +259,6 @@ export class ForecastPage {
                 alert.present();
               },
               () => {
-                // console.log(this.visibleSlides);
                 this.zone.run(() => {
                   let toast = this.toastCtrl.create({
                     message: 'Capacity updated => Data refreshed!',
@@ -282,7 +267,6 @@ export class ForecastPage {
                   });
                   toast.present();
                   this.mapLoaded = true;
-                  // console.log(this.visibleSlides);
                 });
               }
             );
@@ -299,6 +283,7 @@ export class ForecastPage {
     prompt.present();
   }
 
+  // Save forecast to storage
   saveForecast() {
     this.storage.get('forecast').then((res) => {
       if (res == null) {
@@ -318,7 +303,6 @@ export class ForecastPage {
           });
           this.storage.set('forecast', savedForecasts);
           this.savedForecastToast();
-
         });
       }
       else {
@@ -342,6 +326,7 @@ export class ForecastPage {
 
   }
 
+  // Alert for displaying the a forecast is saved
   savedForecastToast() {
     let toast = this.toastCtrl.create({
       message: 'Forecast was saved',
@@ -351,8 +336,8 @@ export class ForecastPage {
     toast.present();
   }
 
+  // Tilt input alert
   advanceSettings() {
-
     let prompt = this.alertCtrl.create({
       title: 'Panel system tilt angle',
       message: "Enter tilt angle from 0 - 90. Default is 23 degrees",
@@ -415,7 +400,6 @@ export class ForecastPage {
                 alert.present();
               },
               () => {
-                // console.log(this.visibleSlides);
                 this.zone.run(() => {
                   let toast = this.toastCtrl.create({
                     message: 'Tilt updated => Data refreshed!',
@@ -424,7 +408,6 @@ export class ForecastPage {
                   });
                   toast.present();
                   this.mapLoaded = true;
-                  // console.log(this.visibleSlides);
                 });
               }
             );
